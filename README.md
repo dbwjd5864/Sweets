@@ -9,6 +9,8 @@ Sweets
 
 > "**_Sweets_**" is a simple game built with javascript (canvas) and CSS. The player controls their character using keyboard’s left and right arrow keys to collect the falling **_sweets_** avoiding the falling pumpkins.
 
+Live Demo : [Click Here :)](https://sweetday.netlify.app/)
+
 ## Technologies Used 🛠
 
 - HTML
