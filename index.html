@@ -1,43 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>The Witch's House</title>
-    <meta charset="utf-8">
-    <script src="main.js" type="text/javascript" defer></script>
-    <style>
-      #start {
-        font-family: Comic Sans MS;
-        background-color: #874E4C;
-        border: none;
-        border-radius: 13px;
-        box-shadow: 0 8px #EABCAC;
-        color: #F7DFD4;
-        padding: 15px 20px;
-        text-align: center;
-        font-size: 18px;
-        opacity: 0.8;
-        transition: 0.3s;
-        text-decoration: none;
-        cursor: pointer;
-        position: relative;
-        left: 330px;
-        top: 10px;
-      }
-      #start:hover {
-        opacity: 1;
-      }
-      #start:active {
-        box-shadow: 0 4px #EABCAC;
-        transform: translateY(4px);
-      }
-    </style>
+    <title>Sweet Day</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <h1 style="font-family: comic sans ms;">The Witch's House</h1>
+    <h1 class="game-title">Sweet Day🍭</h1>
 
-    <canvas id="canvas" width="800" height="600" style="border: solid #874E4C 2px; border-radius: 7px;"></canvas>
-    <br>
-    <input type="button" id="start" value="Start Game">
+    <canvas id="canvas" class="canvas" width="800" height="600"></canvas>
+    <br />
+    <input class="start" type="button" id="start" value="Start Game" />
+
+    <script src="script.js"></script>
   </body>
 </html>

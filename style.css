@@ -1,0 +1,48 @@
+/* ----------- Fonts ----------- */
+@import url('https://fonts.googleapis.com/css2?family=Stick&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+  background-color: #fcfcfc;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-title {
+  font-family: 'Stick', sans-serif;
+}
+
+.canvas {
+  border: solid #874e4c 2px;
+  border-radius: 7px;
+}
+
+.start {
+  background-color: #874e4c;
+  border: none;
+  border-radius: 13px;
+  box-shadow: 0 8px #eabcac;
+  color: #f7dfd4;
+  padding: 15px 20px;
+  font-size: 18px;
+  opacity: 0.8;
+  transition: 0.3s;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.start:hover {
+  opacity: 1;
+}
+
+.start:active {
+  box-shadow: 0 4px #eabcac;
+  transform: translateY(4px);
+}
