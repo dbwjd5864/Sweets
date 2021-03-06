@@ -1,6 +1,7 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let gameOver = true;
+let unPressed = true;
 let pumpkinCount;
 let sweetCount;
 
@@ -43,8 +44,11 @@ let sweet = {
 let backGroundImg = new Image();
 backGroundImg.src = 'images/background.png';
 
-let characterImg = new Image();
-characterImg.src = 'images/character_right.png';
+let characterRightImg = new Image();
+characterRightImg.src = 'images/character_right.png';
+
+let characterLeftImg = new Image();
+characterLeftImg.src = 'images/character_left.png';
 
 let score = new Image();
 score.src = 'images/score.png';
@@ -55,13 +59,27 @@ sweetImage.src = 'images/sweets.png';
 let fallingPumpkinImg = new Image();
 fallingPumpkinImg.src = 'images/pumpkin.png';
 
-let birdImage = new Image();
+let birdLeftImage = new Image();
+birdLeftImage.src = 'images/birdLeft.png';
 
-document.addEventListener('keydown', keyDownHandler);
-document.addEventListener('keyup', keyUpHandler);
+let birdRightImage = new Image();
+birdRightImage.src = 'images/birdRight.png';
+
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
 document.getElementById('start').addEventListener('click', startGame);
 
 function startGame() {
+  pumpkin.positionX = [];
+  pumpkin.positionY = [];
+  pumpkin.fallingSpeed = [];
+  pumpkin.score = 0;
+
+  sweet.positionX = [];
+  sweet.positionY = [];
+  sweet.fallingSpeed = [];
+  sweet.score = 0;
+
   gameOver = false;
 }
 
@@ -81,32 +99,41 @@ function keyUpHandler(e) {
   }
 }
 
-function characterPosition(character) {
+function character() {
+  characterPosition();
+  if (unPressed) {
+    ctx.drawImage(
+      characterRightImg,
+      player.characterX,
+      player.characterY,
+      player.width,
+      player.height
+    );
+  } else {
+    ctx.drawImage(
+      characterLeftImg,
+      player.characterX,
+      player.characterY,
+      player.width,
+      player.height
+    );
+  }
+}
+
+function characterPosition() {
   if (player.leftPressed && player.characterX > 0) {
-    characterImg.src = 'images/character_left.png';
     player.characterX -= 8;
+    unPressed = false;
   }
   if (player.rightPressed && player.characterX + player.width < canvas.width) {
-    characterImg.src = 'images/character_right.png';
     player.characterX += 8;
+    unPressed = true;
   }
 }
 
 //background
 function backGround() {
   ctx.drawImage(backGroundImg, 0, 0, 800, 600);
-}
-
-//character
-function character() {
-  characterPosition(characterImg);
-  ctx.drawImage(
-    characterImg,
-    player.characterX,
-    player.characterY,
-    player.width,
-    player.height
-  );
 }
 
 //score
@@ -128,9 +155,8 @@ function sweetScore() {
 //bird
 function flyingBird() {
   if (bird.speed == 3.5) {
-    birdImage.src = 'images/bird_right.png';
     ctx.drawImage(
-      birdImage,
+      birdRightImage,
       bird.positionX + bird.speed,
       bird.positionY,
       bird.width,
@@ -138,15 +164,15 @@ function flyingBird() {
     );
   }
   if (bird.speed == -3.5) {
-    birdImage.src = 'images/bird_left.png';
     ctx.drawImage(
-      birdImage,
+      birdLeftImage,
       bird.positionX + bird.speed,
       bird.positionY,
       bird.width,
       bird.height
     );
   }
+
   if (
     bird.positionX + bird.speed > canvas.width - bird.width ||
     bird.positionX + bird.speed < 0
@@ -158,7 +184,7 @@ function flyingBird() {
 
 function setsweet() {
   sweet.positionX.push(bird.positionX);
-  sweet.positionY.push(bird.positionY);
+  sweet.positionY.push(bird.positionY + 40);
   sweet.fallingSpeed.push(Math.floor(Math.random() * 5) + 5);
 
   sweetCount = sweet.positionX.length;
@@ -231,20 +257,13 @@ function updateScreen() {
 }
 
 function showResult() {
-  if (pumpkin.score !== 0 || sweet.score !== 0) {
-    clear();
-    ctx.drawImage(score, 10, 8, 200, 100);
-    document.getElementById('start').innerText = 'Try Again';
-  }
-  pumpkin.positionX = [];
-  pumpkin.positionY = [];
-  pumpkin.fallingSpeed = [];
-  pumpkin.score = 0;
+  backGround();
+  ctx.drawImage(score, 230, 200, 350, 180);
 
-  sweet.positionX = [];
-  sweet.positionY = [];
-  sweet.fallingSpeed = [];
-  sweet.score = 0;
+  ctx.font = '40px Comic Sans MS';
+  ctx.fillStyle = 'black';
+  ctx.fillText(pumpkin.score, 430, 300);
+  ctx.fillText(sweet.score, 430, 360);
 }
 
 //clear canvas
@@ -264,11 +283,9 @@ function trackGame() {
     fallingPumpkin();
     updateScreen();
   } else {
-    backGround();
     showResult();
   }
 }
-
 let gameTrack = setInterval(trackGame, 100);
 let sweetTimer = setInterval(setsweet, 7000);
 let pumpkinTimer = setInterval(setPumpkin, pumpkin.time);

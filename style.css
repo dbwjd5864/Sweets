@@ -36,10 +36,15 @@ body {
   transition: 0.3s;
   text-decoration: none;
   cursor: pointer;
+  margin-bottom: 2rem;
 }
 
 .start:hover {
   opacity: 1;
+}
+
+.start:focus {
+  outline: 0;
 }
 
 .start:active {
