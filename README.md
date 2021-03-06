@@ -24,3 +24,9 @@ Live Demo : [Click Here :)](https://sweetday.netlify.app/)
 2. Open index.html in your browser
 
 ## Screenshot
+
+<p float='left' align='middle'>
+   <img src='assets/loading.png' width='400' alt='loading'/>
+   <img src='assets/inGame.png' width='400' alt='inGame'/>
+</p>
+
