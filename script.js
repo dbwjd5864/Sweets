@@ -1,227 +1,274 @@
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
-var gameOver = true;
-var pumpkinCount;
-var candyCount;
+let canvas = document.getElementById('canvas');
+let ctx = canvas.getContext('2d');
+let gameOver = true;
+let pumpkinCount;
+let sweetCount;
 
-var witch = {
-  positionX: canvas.width/2,
+let bird = {
+  positionX: canvas.width / 2,
   positionY: 10,
   speed: 3.5,
   width: 100,
-  height: 100
+  height: 100,
 };
 
-var player = {
-    characterX: canvas.width/2,
-    characterY: canvas.height - 70,
-    width: 60,
-    height: 70,
-    rightPressed: false,
-    leftPressed: false
+let player = {
+  characterX: canvas.width / 2,
+  characterY: canvas.height - 70,
+  width: 60,
+  height: 70,
+  rightPressed: false,
+  leftPressed: false,
 };
 
-var pumpkin = {
-    positionX: [],
-    positionY: [],
-    width: 35,
-    height: 35,
-    fallingSpeed: [],
-    time: 800,
-    score: 0
+let pumpkin = {
+  positionX: [],
+  positionY: [],
+  width: 40,
+  height: 35,
+  fallingSpeed: [],
+  time: 800,
+  score: 0,
 };
 
-var candy = {
-    positionX: [],
-    positionY: [],
-    width: 43,
-    height: 30,
-    fallingSpeed: [],
-    score: 0
+let sweet = {
+  positionX: [],
+  positionY: [],
+  width: 43,
+  height: 30,
+  fallingSpeed: [],
+  score: 0,
 };
 
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-document.getElementById("start").addEventListener("click", startGame);
+let backGroundImg = new Image();
+backGroundImg.src = 'images/background.png';
 
-function startGame(){
+let characterImg = new Image();
+characterImg.src = 'images/character_right.png';
+
+let score = new Image();
+score.src = 'images/score.png';
+
+let sweetImage = new Image();
+sweetImage.src = 'images/sweets.png';
+
+let fallingPumpkinImg = new Image();
+fallingPumpkinImg.src = 'images/pumpkin.png';
+
+let birdImage = new Image();
+
+document.addEventListener('keydown', keyDownHandler);
+document.addEventListener('keyup', keyUpHandler);
+document.getElementById('start').addEventListener('click', startGame);
+
+function startGame() {
   gameOver = false;
 }
 
 function keyDownHandler(e) {
-	if(e.keyCode == 39){
-		player.rightPressed = true;
-	}
-	else if(e.keyCode == 37){
-		player.leftPressed = true;
-	}
+  if (e.keyCode == 39) {
+    player.rightPressed = true;
+  } else if (e.keyCode == 37) {
+    player.leftPressed = true;
+  }
 }
 
 function keyUpHandler(e) {
-	if(e.keyCode == 39){
-		player.rightPressed = false;
-	}
-	else if(e.keyCode == 37){
-		player.leftPressed = false;
-	}
+  if (e.keyCode == 39) {
+    player.rightPressed = false;
+  } else if (e.keyCode == 37) {
+    player.leftPressed = false;
+  }
 }
 
-function characterPosition() {
-	if(player.leftPressed && player.characterX > 0){
-		player.characterX -= 8;
-	}
-	if(player.rightPressed && player.characterX + player.width < canvas.width) {
-		player.characterX += 8;
-	}
+function characterPosition(character) {
+  if (player.leftPressed && player.characterX > 0) {
+    characterImg.src = 'images/character_left.png';
+    player.characterX -= 8;
+  }
+  if (player.rightPressed && player.characterX + player.width < canvas.width) {
+    characterImg.src = 'images/character_right.png';
+    player.characterX += 8;
+  }
 }
 
 //background
-function backGround(){
-  let backGround = new Image();
-  backGround.src = "images/background.jpg";
-  ctx.drawImage(backGround, 0, 0, 800, 600);
+function backGround() {
+  ctx.drawImage(backGroundImg, 0, 0, 800, 600);
 }
 
 //character
-function character(){
-  let character = new Image();
-  character.src = "images/character.png";
-  ctx.drawImage(character, player.characterX, player.characterY, player.width, player.height);
-  characterPosition();
+function character() {
+  characterPosition(characterImg);
+  ctx.drawImage(
+    characterImg,
+    player.characterX,
+    player.characterY,
+    player.width,
+    player.height
+  );
 }
 
 //score
-function pumpkinScore(){
-  let score = new Image();
-  score.src = "images/score.png";
-  ctx.drawImage(score, 10, 8, 215, 100);
+function showScore() {
+  ctx.drawImage(score, 10, 8, 200, 100);
 
-  ctx.font = "42px Comic Sans MS";
-  ctx.fillStyle = "#fe9a16";
-  ctx.fillText(pumpkin.score, 147, 68);
+  ctx.font = '30px Comic Sans MS';
+  ctx.fillStyle = 'black';
+  ctx.fillText(pumpkin.score, 140, 69);
 }
 
-//candy Score
-function candyScore(){
-  let candyImage = new Image();
-  candyImage.src = "images/candy.png";
-  ctx.drawImage(candyImage, 30, 110, 50, 30);
-
-  ctx.font = "37px Comic Sans MS";
-  ctx.fillStyle = "#c016fe";
-  ctx.fillText(candy.score, 100, 140);
+//sweet Score
+function sweetScore() {
+  ctx.font = '30px Comic Sans MS';
+  ctx.fillStyle = 'black';
+  ctx.fillText(sweet.score, 140, 103);
 }
 
-//witch
-function flyingWitch(){
-  let witchImage = new Image();
-  if(witch.speed == 3.5){
-    witchImage.src = "images/witch_right.png";
-    ctx.drawImage(witchImage, witch.positionX + witch.speed, witch.positionY, witch.width, witch.height);
+//bird
+function flyingBird() {
+  if (bird.speed == 3.5) {
+    birdImage.src = 'images/bird_right.png';
+    ctx.drawImage(
+      birdImage,
+      bird.positionX + bird.speed,
+      bird.positionY,
+      bird.width,
+      bird.height
+    );
   }
-  if(witch.speed == -3.5){
-    witchImage.src = "images/witch_left.png";
-    ctx.drawImage(witchImage, witch.positionX + witch.speed, witch.positionY, witch.width, witch.height);
+  if (bird.speed == -3.5) {
+    birdImage.src = 'images/bird_left.png';
+    ctx.drawImage(
+      birdImage,
+      bird.positionX + bird.speed,
+      bird.positionY,
+      bird.width,
+      bird.height
+    );
   }
-  if(witch.positionX + witch.speed > canvas.width - witch.width || witch.positionX + witch.speed < 0){
-    witch.speed = -witch.speed;
+  if (
+    bird.positionX + bird.speed > canvas.width - bird.width ||
+    bird.positionX + bird.speed < 0
+  ) {
+    bird.speed = -bird.speed;
   }
-  witch.positionX += witch.speed;
+  bird.positionX += bird.speed;
 }
 
-function setCandy(){
-  candy.positionX.push(witch.positionX);
-  candy.positionY.push(witch.positionY);
-  candy.fallingSpeed.push((Math.floor(Math.random()*5)+5));
+function setsweet() {
+  sweet.positionX.push(bird.positionX);
+  sweet.positionY.push(bird.positionY);
+  sweet.fallingSpeed.push(Math.floor(Math.random() * 5) + 5);
 
-  candyCount = candy.positionX.length;
+  sweetCount = sweet.positionX.length;
 }
 
-function fallingCandy(){
-  let fallingCandy = new Image();
-  fallingCandy.src = "images/candy.png";
-  for(var i=0; i< candyCount; i++){
-    ctx.drawImage(fallingCandy, candy.positionX[i], candy.positionY[i], candy.width, candy.height);
-    candy.positionY[i] += candy.fallingSpeed[i];
+function fallingsweet() {
+  for (let i = 0; i < sweetCount; i++) {
+    ctx.drawImage(
+      sweetImage,
+      sweet.positionX[i],
+      sweet.positionY[i],
+      sweet.width,
+      sweet.height
+    );
+    sweet.positionY[i] += sweet.fallingSpeed[i];
   }
 }
 
-function setPumpkin(){
-  pumpkin.positionX.push(Math.floor((Math.random()*720)+ 40));
-  pumpkin.positionY.push(witch.positionY);
-  pumpkin.fallingSpeed.push((Math.floor(Math.random()*5)+5));
+function setPumpkin() {
+  pumpkin.positionX.push(Math.floor(Math.random() * 720 + 40));
+  pumpkin.positionY.push(bird.positionY);
+  pumpkin.fallingSpeed.push(Math.floor(Math.random() * 5) + 5);
 
   pumpkinCount = pumpkin.positionX.length;
 }
 
-function fallingPumpkin(){
-	let fallingPumpkin = new Image();
-	fallingPumpkin.src = "images/pumpkin.png";
-	for(var i=0; i< pumpkinCount; i++){
-		ctx.drawImage(fallingPumpkin, pumpkin.positionX[i], pumpkin.positionY[i], pumpkin.width, pumpkin.height);
-		pumpkin.positionY[i] += pumpkin.fallingSpeed[i];
-	}
+function fallingPumpkin() {
+  for (let i = 0; i < pumpkinCount; i++) {
+    ctx.drawImage(
+      fallingPumpkinImg,
+      pumpkin.positionX[i],
+      pumpkin.positionY[i],
+      pumpkin.width,
+      pumpkin.height
+    );
+    pumpkin.positionY[i] += pumpkin.fallingSpeed[i];
+  }
 }
 
-function updateScreen(){
-  for(var i=0; i<candy.positionY.length; i++){
-    if(player.characterX < candy.positionX[i] + candy.width/2 && player.characterX + player.width > candy.positionX[i] && player.characterY < candy.positionY[i] + candy.height/2){
-      candy.score++;
-      candy.positionX[i] = undefined;
-      candy.positionY[i] = undefined;
-
+function updateScreen() {
+  for (let i = 0; i < sweet.positionY.length; i++) {
+    if (
+      player.characterX < sweet.positionX[i] + sweet.width / 2 &&
+      player.characterX + player.width > sweet.positionX[i] &&
+      player.characterY < sweet.positionY[i] + sweet.height / 2
+    ) {
+      sweet.score++;
+      sweet.positionX[i] = undefined;
+      sweet.positionY[i] = undefined;
     }
-    if(candy.positionY[i] > canvas.height-candy.height){
-      candy.positionX[i] = undefined;
-      candy.positionY[i] = undefined;
+    if (sweet.positionY[i] > canvas.height - sweet.height) {
+      sweet.positionX[i] = undefined;
+      sweet.positionY[i] = undefined;
     }
   }
-  for(var j=0; j<pumpkin.positionY.length; j++){
-    if(pumpkin.positionY[j] > canvas.height-pumpkin.height){
+  for (let j = 0; j < pumpkin.positionY.length; j++) {
+    if (pumpkin.positionY[j] > canvas.height - pumpkin.height) {
       pumpkin.score++;
       pumpkin.positionX[j] = undefined;
       pumpkin.positionY[j] = undefined;
     }
-    if(player.characterX < pumpkin.positionX[j] + pumpkin.width/2 && player.characterX + player.width > pumpkin.positionX[j] && player.characterY < pumpkin.positionY[j] + pumpkin.height/2){
+    if (
+      player.characterX < pumpkin.positionX[j] + pumpkin.width / 2 &&
+      player.characterX + player.width > pumpkin.positionX[j] &&
+      player.characterY < pumpkin.positionY[j] + pumpkin.height / 2
+    ) {
       gameOver = true;
     }
   }
 }
 
-function showResult(){
+function showResult() {
+  if (pumpkin.score !== 0 || sweet.score !== 0) {
+    clear();
+    ctx.drawImage(score, 10, 8, 200, 100);
+    document.getElementById('start').innerText = 'Try Again';
+  }
   pumpkin.positionX = [];
   pumpkin.positionY = [];
   pumpkin.fallingSpeed = [];
   pumpkin.score = 0;
 
-  candy.positionX = [];
-  candy.positionY = [];
-  candy.fallingSpeed = [];
-  candy.score = 0;
+  sweet.positionX = [];
+  sweet.positionY = [];
+  sweet.fallingSpeed = [];
+  sweet.score = 0;
 }
 
 //clear canvas
-function clear(){
+function clear() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function trackGame(){
-  if(!gameOver){
+function trackGame() {
+  if (!gameOver) {
     clear();
     backGround();
-    pumpkinScore();
+    showScore();
     character();
-    candyScore();
-    flyingWitch();
-    fallingCandy();
+    sweetScore();
+    flyingBird();
+    fallingsweet();
     fallingPumpkin();
     updateScreen();
- }
- else{
+  } else {
+    backGround();
     showResult();
- }
+  }
 }
 
-var trackGame = setInterval(trackGame, 100);
-var candyTimer = setInterval(setCandy, 7000);
-var pumpkinTimer = setInterval (setPumpkin, pumpkin.time);
+let gameTrack = setInterval(trackGame, 100);
+let sweetTimer = setInterval(setsweet, 7000);
+let pumpkinTimer = setInterval(setPumpkin, pumpkin.time);
